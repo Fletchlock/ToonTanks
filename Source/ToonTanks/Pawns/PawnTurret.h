@@ -14,4 +14,18 @@ class TOONTANKS_API APawnTurret : public APawnBase
 {
 	GENERATED_BODY()
 	
+
+public:
+
+	APawnTurret();
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 };
