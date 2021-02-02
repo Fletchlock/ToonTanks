@@ -2,24 +2,28 @@
 
 
 #include "PawnTurret.h"
+#include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 
 // Called when the game starts or when spawned
 void APawnTurret::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GetWorld()->GetTimerManager().SetTimer(FireRateTimerHandle, this, &APawnTurret::CheckFireCondition, FireRate, true);
 }
 
 // Called every frame
 void APawnTurret::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-// Called to bind functionality to input
-void APawnTurret::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void APawnTurret::CheckFireCondition()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	
+	// if Player == null || is Dead then BAIL!!
+
+	// If player IS in range then FIRE!!
+
+	UE_LOG(LogTemp, Warning, TEXT("Fire Condition Checked"));
 }
