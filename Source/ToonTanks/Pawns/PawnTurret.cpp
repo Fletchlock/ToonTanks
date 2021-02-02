@@ -13,10 +13,6 @@ void APawnTurret::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(FireRateTimerHandle, this, &APawnTurret::CheckFireCondition, FireRate, true);
 }
 
-APawnTurret::APawnTurret()
-{
-}
-
 // Called every frame
 void APawnTurret::Tick(float DeltaTime)
 {

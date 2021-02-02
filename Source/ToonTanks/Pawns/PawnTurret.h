@@ -25,8 +25,6 @@ private:
 
 
 public:
-	APawnTurret();
-
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
