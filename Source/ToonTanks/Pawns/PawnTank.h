@@ -30,11 +30,19 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tank Movement", meta = (AllowPrivateAccess = "true", ClampMin = "10", ClampMax = "500"))
 	float RotateSpeed = 100.f;
 
+	APlayerController* PlayerControllerRef;
+
 	void CalculateMoveInput(float Value);
 	void CalculateRotateInput(float Value);
 
 	void Move();
 	void Rotate();
+
+	void XAxis(float Value);
+	void YAxis(float Value);
+
+	float StickX;
+	float StickY;
 
 public:
 
@@ -49,4 +57,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	virtual void HandleDestruction() override;
 };

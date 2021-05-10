@@ -21,6 +21,13 @@ void APawnTank::BeginPlay()
 {
 	Super::BeginPlay();
 
+	PlayerControllerRef = Cast<APlayerController>(GetController());
+}
+
+void APawnTank::HandleDestruction()
+{
+	Super::HandleDestruction();
+	// Hide Player and remove input. TODO - Creat new function to handle this.
 }
 
 // Called every frame
@@ -30,6 +37,26 @@ void APawnTank::Tick(float DeltaTime)
 
 	Rotate();
 	Move();
+
+	StickX = InputComponent->GetAxisValue("GamepadX");
+	StickY = InputComponent->GetAxisValue("GamepadY");
+
+	if (PlayerControllerRef && (StickX == 0.0 && StickY == 0.0))
+	{
+		FHitResult TraceHitResult;
+		PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, false, TraceHitResult);
+		FVector HitLocation = TraceHitResult.ImpactPoint;
+
+		RotateTurret(HitLocation);
+	}
+	else
+	{
+		FVector Direction = GetActorForwardVector() * -StickY;
+		Direction += GetActorRightVector() * StickX;
+		//FVector Direction(StickY, StickX, 0.f);
+
+		TurretMesh->SetWorldRotation(Direction.Rotation());
+	}
 }
 
 // Called to bind functionality to input
@@ -37,8 +64,12 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("MoveForward", this, &APawnTank::CalculateMoveInput);
-	PlayerInputComponent->BindAxis("Turn", this, & APawnTank::CalculateRotateInput);
+	PlayerInputComponent->BindAxis("Turn", this, &APawnTank::CalculateRotateInput);
+	PlayerInputComponent->BindAxis("GamepadX", this, &APawnTank::XAxis);
+	PlayerInputComponent->BindAxis("GamepadY", this, &APawnTank::YAxis);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APawnTank::Fire);
 }
+
 
 void APawnTank::CalculateMoveInput(float Value)
 {
@@ -60,4 +91,23 @@ void APawnTank::Move()
 void APawnTank::Rotate()
 {
 	AddActorLocalRotation(RotationDirection, true);
+}
+
+void APawnTank::XAxis(float Value)
+{
+	
+	if (Value != 0.f)
+	{
+		StickX = Value;
+	}
+}
+
+void APawnTank::YAxis(float Value)
+{
+
+	if (Value != 0.f)
+	{
+		StickY = Value;
+	}
+	return;
 }
